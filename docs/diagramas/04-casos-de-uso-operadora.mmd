@@ -1,0 +1,24 @@
+flowchart LR
+  ANA(["🧑‍💼 Analista"])
+  AUD(["🩺 Auditor médico"])
+  ATE(["🎧 Atendente"])
+  GES(["📊 Gestor"])
+    UC07("UC07 Entrar com perfil interno")
+    UC08("UC08 Trabalhar fila por prazo")
+    UC09("UC09 Solicitar documento")
+    UC10("UC10 Registrar parecer")
+    UC11("UC11 Negar com fundamentação")
+    UC16("UC16 Resumir documentos com IA")
+    UC12("UC12 Consulta rápida")
+    UC13("UC13 Ver dashboard")
+    UC14("UC14 Consultar auditoria")
+    UC15("UC15 Sincronizar pedidos e decisões")
+  ERP(["⚙️ Sistema de gestão"])
+  ANA --- UC07 & UC08 & UC09 & UC10
+  AUD --- UC07 & UC08 & UC10
+  AUD -.- UC16
+  ATE --- UC07 & UC12
+  GES --- UC07 & UC13 & UC14
+  UC10 -. "«extend»" .-> UC11
+  UC15 --- ERP
+  style UC16 stroke-dasharray: 5 5

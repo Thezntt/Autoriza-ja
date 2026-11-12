@@ -1,0 +1,24 @@
+sequenceDiagram
+  autonumber
+  actor U as Auditor médico
+  participant F as Painel da Operadora
+  participant R as API · regulação
+  participant D as PostgreSQL
+  participant Q as Fila (Redis)
+  participant W as Worker
+  participant E as Sistema de gestão (ERP)
+  U->>F: escolhe "Negar" e preenche campos
+  F->>R: POST /pedidos/{id}/parecer
+  R->>R: valida perfil = Auditor (RN06)
+  R->>R: valida motivo, fundamentação e texto (RN05)
+  alt campos ausentes
+    R-->>F: 422 com lista de campos obrigatórios
+  else válido
+    R->>D: grava Parecer + status Negado (transação)
+    R->>Q: publica PedidoDecidido
+    R-->>F: 200 OK
+    Q->>W: consome evento
+    W->>W: gera resposta formal em PDF
+    W->>E: envia decisão ao ERP
+    W-->>U: notifica beneficiário (link para a resposta)
+  end

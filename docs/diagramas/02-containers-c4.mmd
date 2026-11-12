@@ -1,0 +1,20 @@
+flowchart TB
+  subgraph Clientes
+    PWA["Portal do Beneficiário<br/>React + Vite (PWA)"]
+    ADM["Painel da Operadora<br/>React + Vite (SPA)"]
+  end
+  PWA -->|HTTPS / JSON| GW
+  ADM -->|HTTPS / JSON| GW
+  GW["Proxy reverso<br/>Nginx: TLS, rate limit"] --> API
+  subgraph Servidor["Aplicação"]
+    API["API REST<br/>Node.js + NestJS<br/>(monólito modular)"]
+    WRK["Worker<br/>BullMQ: notificações,<br/>sincronização, PDFs"]
+  end
+  API --> DB[("PostgreSQL 16<br/>dados e auditoria")]
+  API --> RED[("Redis<br/>filas, OTP, cache")]
+  API --> S3[("Armazenamento de objetos<br/>S3 / MinIO<br/>anexos criptografados")]
+  WRK --> RED
+  WRK --> DB
+  WRK --> S3
+  WRK --> EXT["WhatsApp · E-mail · SMS"]
+  WRK <--> ERP[("Sistema de gestão<br/>da operadora")]

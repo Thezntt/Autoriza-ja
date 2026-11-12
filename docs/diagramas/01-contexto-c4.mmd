@@ -1,0 +1,12 @@
+flowchart LR
+  BEN(["Beneficiário<br/>(celular)"]) -->|acompanha pedidos, envia documentos| SYS
+  OPE(["Equipe da operadora<br/>analista, auditor, atendente, gestor"]) -->|regula, decide, consulta| SYS
+  SYS["<b>AutorizaJá</b><br/>plataforma de acompanhamento<br/>de autorizações"]
+  SYS <-->|pedidos e decisões| ERP[("Sistema de gestão<br/>da operadora (ERP)")]
+  SYS -->|mensagens| WPP["WhatsApp Business<br/>Cloud API"]
+  SYS -->|e-mails| MAIL["Serviço de e-mail<br/>(SMTP)"]
+  SYS -->|código OTP| SMS["Gateway de SMS"]
+  SYS -.->|resumo de documentos<br/>Could-Have| LLM["API de LLM"]
+  classDef ext fill:#f4f6f5,stroke:#8a9a96,color:#16211f
+  class ERP,WPP,MAIL,SMS,LLM ext
+  style SYS fill:#0e7a63,color:#ffffff,stroke:#0b5f4d

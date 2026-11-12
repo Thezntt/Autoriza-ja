@@ -1,0 +1,23 @@
+stateDiagram-v2
+  direction TB
+  [*] --> Recebido : importado do ERP
+  Recebido --> EmAnalise : analista abre
+  EmAnalise --> PendenteDocumento : solicita documento
+  PendenteDocumento --> EmAnalise : beneficiário envia
+  EmAnalise --> EmAuditoria : encaminha ao auditor
+  EmAnalise --> Autorizado : regra administrativa atendida
+  EmAuditoria --> PendenteDocumento : solicita documento
+  EmAuditoria --> Autorizado
+  EmAuditoria --> AutorizadoParcial
+  EmAuditoria --> Negado : motivo + fundamentação
+  Recebido --> Cancelado
+  EmAnalise --> Cancelado
+  PendenteDocumento --> Cancelado
+  Autorizado --> [*]
+  AutorizadoParcial --> [*]
+  Negado --> [*]
+  Cancelado --> [*]
+  EmAuditoria : Em auditoria médica
+  EmAnalise : Em análise
+  PendenteDocumento : Pendente de documento
+  AutorizadoParcial : Autorizado parcialmente

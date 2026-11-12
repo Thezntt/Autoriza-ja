@@ -1,0 +1,9 @@
+flowchart LR
+  A["Push / PR"] --> B["Instalar<br/>pnpm install"]
+  B --> C["Lint + formatação"]
+  C --> D["Testes unitários<br/>cobertura ≥ 70% domínio"]
+  D --> E["Testes de integração<br/>Postgres e Redis em contêiner"]
+  E --> F["Build dos 3 apps"]
+  F --> G{"Branch main?"}
+  G -- sim --> H["Imagem Docker<br/>e implantação"]
+  G -- não --> I["Status no PR"]

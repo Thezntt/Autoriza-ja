@@ -1,0 +1,22 @@
+sequenceDiagram
+  autonumber
+  actor B as Beneficiário
+  participant P as Portal (PWA)
+  participant A as API · documentos
+  participant S as Armazenamento (S3)
+  participant D as PostgreSQL
+  participant Q as Fila (Redis)
+  participant W as Worker
+  B->>P: seleciona foto/PDF
+  P->>P: valida tipo e tamanho (até 10 MB)
+  P->>A: POST /pedidos/{id}/documentos (JWT)
+  A->>A: verifica dono do pedido e status
+  A->>A: confere tipo real do arquivo
+  A->>S: grava arquivo criptografado
+  A->>D: registra Documento + EventoStatus (Em análise)
+  A->>Q: publica evento StatusAlterado
+  A-->>P: 201 Created
+  P-->>B: "Documento enviado"
+  Q->>W: consome evento
+  W->>D: grava auditoria
+  W-->>B: e-mail/WhatsApp de confirmação (sem dado clínico)

@@ -1,0 +1,26 @@
+flowchart LR
+  subgraph API["API NestJS"]
+    AUTH[auth]
+    BEN[beneficiarios]
+    PED[pedidos]
+    PRZ[prazos]
+    DOC[documentos]
+    REG[regulacao]
+    NOT[notificacoes]
+    INT[integracao]
+    REL[relatorios]
+    AUDT[auditoria]
+  end
+  AUTH --> BEN
+  PED --> PRZ
+  PED --> BEN
+  DOC --> PED
+  REG --> PED
+  REG --> PRZ
+  REG --> DOC
+  REL --> PED
+  INT --> PED
+  PED -. evento StatusAlterado .-> NOT
+  PED -. evento StatusAlterado .-> AUDT
+  REG -. evento PedidoDecidido .-> INT
+  REG -. evento PedidoDecidido .-> NOT

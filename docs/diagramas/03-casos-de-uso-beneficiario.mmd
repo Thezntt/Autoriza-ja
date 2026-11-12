@@ -1,0 +1,10 @@
+flowchart LR
+  BEN(["🧑 Beneficiário"])
+    UC01("UC01 Entrar com CPF + OTP")
+    UC02("UC02 Consultar pedidos")
+    UC03("UC03 Acompanhar linha do tempo")
+    UC04("UC04 Enviar documento pendente")
+    UC05("UC05 Definir preferências de aviso")
+    UC06("UC06 Receber notificação")
+  BEN --- UC01 & UC02 & UC03 & UC04 & UC05 & UC06
+  UC03 -. "«extend»" .-> UC04

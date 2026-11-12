@@ -1,0 +1,117 @@
+erDiagram
+  BENEFICIARIO ||--o{ BENEFICIARIO : "titular de"
+  BENEFICIARIO ||--o{ PEDIDO_AUTORIZACAO : possui
+  PRESTADOR ||--o{ PEDIDO_AUTORIZACAO : solicita
+  PARAMETRO_PRAZO ||--o{ PEDIDO_AUTORIZACAO : "define prazo de"
+  USUARIO_INTERNO |o--o{ PEDIDO_AUTORIZACAO : "responsável por"
+  PEDIDO_AUTORIZACAO ||--|{ ITEM_PEDIDO : contem
+  PEDIDO_AUTORIZACAO ||--|{ EVENTO_STATUS : historico
+  PEDIDO_AUTORIZACAO ||--o{ DOCUMENTO : anexos
+  PEDIDO_AUTORIZACAO ||--o{ SOLICITACAO_DOCUMENTO : pendencias
+  SOLICITACAO_DOCUMENTO |o--o{ DOCUMENTO : "atendida por"
+  PEDIDO_AUTORIZACAO ||--o| PARECER : decisao
+  MOTIVO_NEGATIVA |o--o{ PARECER : justifica
+  USUARIO_INTERNO ||--o{ PARECER : emite
+  PEDIDO_AUTORIZACAO ||--o{ NOTIFICACAO : gera
+  BENEFICIARIO ||--o{ NOTIFICACAO : recebe
+
+  BENEFICIARIO {
+    uuid id PK
+    uuid titular_id FK
+    varchar nome
+    char cpf UK
+    date data_nascimento
+    varchar carteirinha UK
+    varchar telefone
+    varchar email
+    boolean aviso_whatsapp
+    boolean aviso_email
+  }
+  PRESTADOR {
+    uuid id PK
+    varchar nome
+    char cnpj UK
+  }
+  PARAMETRO_PRAZO {
+    uuid id PK
+    tipo_pedido tipo UK
+    int dias_uteis
+    boolean resposta_imediata
+  }
+  PEDIDO_AUTORIZACAO {
+    uuid id PK
+    varchar protocolo UK
+    varchar codigo_erp UK
+    uuid beneficiario_id FK
+    uuid prestador_id FK
+    uuid responsavel_id FK
+    tipo_pedido tipo
+    status_pedido status
+    timestamptz data_protocolo
+    date data_limite
+  }
+  ITEM_PEDIDO {
+    uuid id PK
+    uuid pedido_id FK
+    varchar codigo_procedimento
+    varchar descricao
+    int quantidade
+    resultado_item resultado
+  }
+  EVENTO_STATUS {
+    uuid id PK
+    uuid pedido_id FK
+    status_pedido de
+    status_pedido para
+    uuid usuario_id
+    timestamptz em
+  }
+  DOCUMENTO {
+    uuid id PK
+    uuid pedido_id FK
+    uuid solicitacao_id FK
+    varchar nome_arquivo
+    varchar mime_type
+    int tamanho_bytes
+    origem_doc origem
+    varchar chave_armazenamento
+  }
+  SOLICITACAO_DOCUMENTO {
+    uuid id PK
+    uuid pedido_id FK
+    varchar tipo_documento
+    text orientacao
+    boolean atendida
+  }
+  PARECER {
+    uuid id PK
+    uuid pedido_id FK
+    uuid autor_id FK
+    resultado resultado
+    uuid motivo_id FK
+    text fundamentacao
+    text texto_beneficiario
+    varchar chave_pdf_resposta
+  }
+  MOTIVO_NEGATIVA {
+    uuid id PK
+    varchar codigo UK
+    varchar descricao
+    boolean exige_auditor
+  }
+  USUARIO_INTERNO {
+    uuid id PK
+    varchar nome
+    varchar email UK
+    varchar senha_hash
+    perfil perfil
+    boolean ativo
+  }
+  NOTIFICACAO {
+    uuid id PK
+    uuid pedido_id FK
+    uuid beneficiario_id FK
+    canal canal
+    status_envio status
+    int tentativas
+  }

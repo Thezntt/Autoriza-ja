@@ -1,0 +1,19 @@
+flowchart LR
+  subgraph B["Portal do Beneficiário (PWA)"]
+    L1["T1 · Login<br/>CPF + data + OTP"] --> L2["T2 · Meus pedidos"]
+    L2 --> L3["T3 · Detalhe do pedido<br/>linha do tempo"]
+    L3 -->|pendente| L4["Envio de documento"]
+    L3 -->|decidido| L5["Resposta formal (PDF)"]
+    L2 --> L6["Avisos"]
+    L2 --> L7["Perfil e preferências"]
+  end
+  subgraph O["Painel da Operadora"]
+    A1["Login interno"] --> A2["T4 · Fila de regulação"]
+    A2 --> A3["T5 · Detalhe e parecer"]
+    A3 --> A4["Solicitar documento"]
+    A3 --> A5["Negativa fundamentada"]
+    A1 --> A6["Consulta rápida"]
+    A1 --> A7["T6 · Dashboard"]
+    A7 -->|clique no indicador| A2
+  end
+  WA(["Aviso no WhatsApp/e-mail"]) -.->|link| L3

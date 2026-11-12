@@ -1,0 +1,91 @@
+classDiagram
+  direction TB
+  class Beneficiario {
+    +UUID id
+    +String nome
+    +String cpf
+    +Date dataNascimento
+    +String carteirinha
+    +podeVer(pedido) bool
+  }
+  class Contato {
+    +String telefone
+    +String email
+    +bool usaWhatsapp
+    +bool usaEmail
+  }
+  class PedidoAutorizacao {
+    +UUID id
+    +String protocolo
+    +TipoPedido tipo
+    +StatusPedido status
+    +DateTime dataProtocolo
+    +Date dataLimite
+    +alterarStatus(novo, usuario)
+    +semaforo() Semaforo
+  }
+  class ItemPedido {
+    +String codigoProcedimento
+    +String descricao
+    +int quantidade
+    +ResultadoItem resultado
+  }
+  class EventoStatus {
+    +StatusPedido de
+    +StatusPedido para
+    +DateTime em
+    +String observacao
+  }
+  class Documento {
+    +UUID id
+    +String nomeArquivo
+    +String mimeType
+    +int tamanhoBytes
+    +Origem origem
+    +String chaveArmazenamento
+  }
+  class SolicitacaoDocumento {
+    +String tipoDocumento
+    +String orientacao
+    +bool atendida
+  }
+  class Parecer {
+    +Resultado resultado
+    +String motivoCodigo
+    +String fundamentacao
+    +String textoBeneficiario
+    +DateTime em
+    +validar()
+  }
+  class Prestador {
+    +String nome
+    +String cnpj
+  }
+  class UsuarioInterno {
+    +String nome
+    +String email
+    +Perfil perfil
+  }
+  class CalculadoraPrazo {
+    +calcularDataLimite(tipo, data) Date
+    +diasUteisRestantes(pedido) int
+  }
+  class RegistroAuditoria {
+    +String acao
+    +String entidade
+    +DateTime em
+    +JSON detalhes
+  }
+  Beneficiario "1" --> "1" Contato
+  Beneficiario "1" --> "0..*" Beneficiario : dependentes
+  Beneficiario "1" --> "0..*" PedidoAutorizacao
+  PedidoAutorizacao "1" *-- "1..*" ItemPedido
+  PedidoAutorizacao "1" *-- "1..*" EventoStatus
+  PedidoAutorizacao "1" o-- "0..*" Documento
+  PedidoAutorizacao "1" --> "0..*" SolicitacaoDocumento
+  PedidoAutorizacao "1" --> "0..1" Parecer
+  PedidoAutorizacao "*" --> "1" Prestador : solicitante
+  PedidoAutorizacao "*" --> "0..1" UsuarioInterno : responsavel
+  Parecer "*" --> "1" UsuarioInterno : autor
+  PedidoAutorizacao ..> CalculadoraPrazo : usa
+  UsuarioInterno "1" --> "0..*" RegistroAuditoria
